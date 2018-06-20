@@ -173,6 +173,8 @@ createRestaurantHTML = (restaurant) => {
 
   const name = document.createElement('h2');
   name.innerHTML = restaurant.name;
+  if (restaurant.is_favorite)
+    name.className = 'favorite';
   div.append(name);
 
   const neighborhood = document.createElement('p');
@@ -182,6 +184,10 @@ createRestaurantHTML = (restaurant) => {
   const address = document.createElement('p');
   address.innerHTML = restaurant.address;
   div.append(address);
+
+  // const fav = document.createElement('p');
+  // fav.innerHTML = restaurant.is_favorite || false;
+  // div.append(fav);
 
   const more = document.createElement('a');
   more.innerHTML = 'View Details';
