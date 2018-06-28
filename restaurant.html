@@ -46,6 +46,7 @@
     <section id="restaurant-container">
       <h2 id="restaurant-name"></h2>
       <img id="restaurant-img">
+      <a onclick="toggleFavorite();" href="javascript:void(0);"><span id="favorite">Favorite?</span></a>
       <p id="restaurant-cuisine"></p>
       <p id="restaurant-address"></p>
       <table id="restaurant-hours"></table>
@@ -56,42 +57,44 @@
       <ul id="reviews-list" aria-label="reviews"></ul>
     </section>
     <section id="reviews-form">
-        <section>
-            <h2>Send Reviews</h2>
-            <p>
-              <label for="name">
-                <span>Name: </span>
-                <strong><abbr title="required">*</abbr></strong>
-              </label>
-              <input type="text" id="name" required name="username">
-            </p>
-            <p>
-                <label for="card">
-                  <span>Rating:</span>
-                </label>
-                <select id="ration" name="rating" value='3'>
-                  <option value="5">Excellent</option>
-                  <option value="4">Very Good</option>
-                  <option value="3">Good</option>
-                  <option value="2">Average</option>
-                  <option value="1">Poor</option>
-                </select>
-              </p>
-            <p>
-              <label for="mail">
-                <span>E-mail: </span>
-                <strong><abbr title="required">*</abbr></strong>
-              </label>
-              <input type="email" id="mail" name="usermail">
-            </p>
-            <p>
-              <label for="pwd">
-                <span>Password: </span>
-                <strong><abbr title="required">*</abbr></strong>
-              </label>
-              <input type="password" id="pwd" name="password">
-            </p>
-        </section>
+      <section>
+        <h2>Send Reviews</h2>
+        <form action="" id="form">
+          <p>
+            <label for="name">
+              <span>Name: </span>
+              <strong>
+                <abbr title="required">*</abbr>
+              </strong>
+            </label>
+            <input type="text" id="name" required name="username">
+          </p>
+          <p>
+            <label for="card">
+              <span>Rating:</span>
+            </label>
+            <select id="ration" name="rating" value="3">
+              <option value="5">Excellent</option>
+              <option value="4">Very Good</option>
+              <option value="3">Good</option>
+              <option value="2">Average</option>
+              <option value="1">Poor</option>
+            </select>
+          </p>
+          <p>
+            <label for="review">
+              <span>Review: </span>
+              <strong>
+                <abbr title="required">*</abbr>
+              </strong>
+            </label>
+            <textarea id="review" name="review" placeholder="Add review"></textarea>
+          </p>
+          <p>
+            <button type="submit">Submit</button>
+          </p>
+        </form>
+      </section>
     </section>
     <!-- End reviews -->
   </main>

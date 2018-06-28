@@ -1,6 +1,37 @@
 let restaurant;
 var map;
 
+let formEl = document.getElementById('form');
+formEl.addEventListener('submit', function(event) {
+  
+  var formData = new FormData(formEl);
+  
+  DBHelper.addReview(formData)
+    .then(data => {
+      //ul.appendChild(createReviewHTML(data))
+      console.log(data)
+
+    }
+    );
+  
+  event.preventDefault();
+});
+
+toggleFavorite = (restaurant = self.restaurant) => {
+  let is_favorite = "true";
+  if (restaurant.is_favorite == "true")
+   is_favorite = "false";
+  
+  console.log("Valor", restaurant.is_favorite, is_favorite);
+  
+  DBHelper.updateFavorite(restaurant.id, is_favorite)
+    .then(data => {
+        console.log("Recibido", data.is_favorite);
+        self.restaurant = data;
+        updateFavoriteHTML();
+    });
+}
+
 /**
  * Initialize Google map, called from HTML.
  */
@@ -72,6 +103,8 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
+
+  updateFavoriteHTML();
 
   // fill operating hours
   if (restaurant.operating_hours) {
@@ -155,6 +188,14 @@ fillBreadcrumb = (restaurant=self.restaurant) => {
   const li = document.createElement('li');
   li.innerHTML = restaurant.name;
   breadcrumb.appendChild(li);
+}
+
+updateFavoriteHTML = (restaurant=self.restaurant) => {
+  const favorite = document.getElementById('favorite');
+  if (restaurant.is_favorite == 'true')
+    favorite.className = 'favorite';
+  else
+    favorite.className = 'non-favorite';
 }
 
 /**

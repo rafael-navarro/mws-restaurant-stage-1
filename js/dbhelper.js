@@ -9,9 +9,46 @@ class DBHelper {
    */
   static get DATABASE_URL() {
     const port = 1337 // Change this to your server port
-    return `http://localhost:${port}/restaurants/`;
+    return `http://localhost:${port}`;
   }
 
+  static get RESTAURANTS_URL() {
+    return `${DBHelper.DATABASE_URL}/restaurants/`;
+  }
+
+  static get REVIEWS_URL() {
+    return `${DBHelper.DATABASE_URL}/reviews/`; 
+  }
+
+  static updateFavorite(id, is_favorite) {
+    const fetchOptions = {
+      method: 'PUT'
+    };
+    
+    return fetch(`${DBHelper.RESTAURANTS_URL}${id}/?is_favorite=${is_favorite}`, fetchOptions)
+      .then(response => response.json())
+        .catch(e => {
+          //console.log("Error", e);
+          const error = (`Request failed. Returned status of ${e.status}`);
+          throw error;
+        });
+  }
+
+  static addReview(review) {
+    const fetchOptions = {
+      method: 'POST',
+      //headers,
+      body: review
+    };
+    
+    return fetch(DBHelper.REVIEWS_URL, fetchOptions)
+      .then(response => response.json())
+        .catch(e => {
+          //console.log("Error", e);
+          const error = (`Request failed. Returned status of ${e.status}`);
+          throw error;
+        });
+  }
   /**
    * Fetch all restaurants.
    */
