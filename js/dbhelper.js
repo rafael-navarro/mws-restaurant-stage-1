@@ -20,20 +20,36 @@ class DBHelper {
     return `${DBHelper.DATABASE_URL}/reviews/`; 
   }
 
-  static updateFavorite(id, is_favorite) {
-    const fetchOptions = {
-      method: 'PUT'
-    };
-    
-    return fetch(`${DBHelper.RESTAURANTS_URL}${id}/?is_favorite=${is_favorite}`, fetchOptions)
+  /**
+   * Fetch all reviews.
+   */
+  static fetchReviews() {
+
+    return fetch(DBHelper.REVIEWS_URL)
       .then(response => response.json())
-        .catch(e => {
-          //console.log("Error", e);
-          const error = (`Request failed. Returned status of ${e.status}`);
-          throw error;
-        });
+      .catch(e => {
+        const error = (`Request failed. Returned status of ${e.status}`);
+        throw error;
+      });
   }
 
+  /**
+   * Fetch a revies by restaurant ID.
+   */
+  static fetchReviewByRestaurant(id) {
+    return fetch(`${DBHelper.REVIEWS_URL}?restaurant_id=${id}`)
+      .then(response => response.json())
+      .catch(e => {
+        //console.log("Error", e);
+        const error = (`Request failed. Returned status of ${e.status}`);
+        throw error;
+      });
+  }
+
+  
+  /**
+   * Add review 
+   */
   static addReview(review) {
     const fetchOptions = {
       method: 'POST',
@@ -49,12 +65,31 @@ class DBHelper {
           throw error;
         });
   }
+
+
+  /**
+   * Update favorite flag by restaurant id
+   */
+  static updateFavorite(id, is_favorite) {
+    const fetchOptions = {
+      method: 'PUT'
+    };
+    
+    return fetch(`${DBHelper.RESTAURANTS_URL}${id}/?is_favorite=${is_favorite}`, fetchOptions)
+      .then(response => response.json())
+        .catch(e => {
+          //console.log("Error", e);
+          const error = (`Request failed. Returned status of ${e.status}`);
+          throw error;
+        });
+  }
+
   /**
    * Fetch all restaurants.
    */
   static fetchRestaurants() {
 
-    return fetch(DBHelper.DATABASE_URL)
+    return fetch(DBHelper.RESTAURANTS_URL)
       .then(response => response.json())
       .catch(e => {
         //console.log("Error", e);
@@ -67,7 +102,7 @@ class DBHelper {
    * Fetch a restaurant by its ID.
    */
   static fetchRestaurantById(id) {
-    return fetch(DBHelper.DATABASE_URL + id)
+    return fetch(DBHelper.RESTAURANTS_URL + id)
       .then(response => response.json())
       .catch(e => {
         //console.log("Error", e);

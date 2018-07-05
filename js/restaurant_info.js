@@ -1,18 +1,53 @@
 let restaurant;
+let reviews;
 var map;
+let dbPromise$
+
+/**
+ * Fetch neighborhoods and cuisines as soon as the page is loaded.
+ */
+document.addEventListener('DOMContentLoaded', (event) => {
+
+  dbPromise$ = IDBHelper.openDatabase();
+
+  IDBHelper.populateReviews(dbPromise$)
+    .then(() => {
+
+    });
+});
+
 
 let formEl = document.getElementById('form');
 formEl.addEventListener('submit', function(event) {
-  
-  var formData = new FormData(formEl);
-  
-  DBHelper.addReview(formData)
-    .then(data => {
-      //ul.appendChild(createReviewHTML(data))
-      console.log(data)
+  const data = getObjectFromForm(formEl);
 
-    }
-    );
+  data['restaurant_id'] = self.restaurant.id;
+  data['createdAt'] = new Date();
+  
+  IDBHelper.addReviewCache(dbPromise$, data)
+    .then(x => {
+      self.fetchReviewsFromURL();
+
+      navigator.serviceWorker.ready.then(function(reg) {
+        return reg.sync.register('sync-reviews');
+      });
+
+
+    });
+
+    // IDBHelper.addReview(dbPromise$, [data])
+    // .then(x => {
+      
+    // });
+
+  // DBHelper.addReview(data)
+  //   .then(data => {
+  //     //ul.appendChild(createReviewHTML(data))
+
+  //     console.log(data)
+
+  //   }
+  //   );
   
   event.preventDefault();
 });
@@ -22,11 +57,8 @@ toggleFavorite = (restaurant = self.restaurant) => {
   if (restaurant.is_favorite == "true")
    is_favorite = "false";
   
-  console.log("Valor", restaurant.is_favorite, is_favorite);
-  
   DBHelper.updateFavorite(restaurant.id, is_favorite)
     .then(data => {
-        console.log("Recibido", data.is_favorite);
         self.restaurant = data;
         updateFavoriteHTML();
     });
@@ -47,6 +79,11 @@ window.initMap = () => {
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
     })
     .catch(error => console.error(error));
+
+    fetchReviewsFromURL()
+    .then(reviews => {
+    })
+    .catch(error => console.error(error));
 }
 
 /**
@@ -61,10 +98,9 @@ fetchRestaurantFromURL = () => {
     error = 'No restaurant id in URL'
     return Promise.reject(error);
   } 
-  else {
-    const database$ = IDBHelper.openDatabase();
-    return IDBHelper.getRestaurantById(database$, id)
-    //return DBHelper.fetchRestaurantById(id)
+   else {
+  //   const database$ = IDBHelper.openDatabase();
+    return IDBHelper.getRestaurantById(dbPromise$, id)
       .then(restaurant => {
         self.restaurant = restaurant;
         if (!restaurant) {
@@ -73,16 +109,31 @@ fetchRestaurantFromURL = () => {
         fillRestaurantHTML();
         return restaurant;
       });
+  }
+}
 
-    // DBHelper.fetchRestaurantById(id, (error, restaurant) => {
-    //   self.restaurant = restaurant;
-    //   if (!restaurant) {
-    //     console.error(error);
-    //     return;
-    //   }
-    //   fillRestaurantHTML();
-    //   callback(null, restaurant)
-    // });
+/**
+ * Get current restaurant from page URL.
+ */
+fetchReviewsFromURL = () => {
+  // if (self.reviews) { // reviews already fetched!
+  //   return Promise.resolve(self.reviews);
+  // }
+  const id = Number(getParameterByName('id'));
+  if (!id) { // no id found in URL
+    error = 'No reviews id in URL'
+    return Promise.reject(error);
+  } 
+  else {
+    return IDBHelper.getReviewsById(dbPromise$, id)
+      .then(reviews => {
+        self.reviews = reviews;
+        if (!reviews) {
+          return Promise.reject(reviews);
+        }
+        fillReviewsHTML();
+        return reviews;
+      });
   }
 }
 
@@ -111,7 +162,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
     fillRestaurantHoursHTML();
   }
   // fill reviews
-  fillReviewsHTML();
+  //fillReviewsHTML();
 }
 
 /**
@@ -137,7 +188,7 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+fillReviewsHTML = (reviews = self.reviews) => {
   const container = document.getElementById('reviews-container');
   const title = document.createElement('h3');
   title.innerHTML = 'Reviews';
@@ -166,7 +217,7 @@ createReviewHTML = (review) => {
   li.appendChild(name);
 
   const date = document.createElement('p');
-  date.innerHTML = review.date;
+  date.innerHTML = review.updatedAt || review.createdAt;
   li.appendChild(date);
 
   const rating = document.createElement('p');
@@ -212,4 +263,14 @@ getParameterByName = (name, url) => {
   if (!results[2])
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
+getObjectFromForm = (formElement) => {
+  const formData = new FormData(formEl);
+
+  result = {}
+  formData.forEach((value, key) => {
+    result[key] = value;
+  });
+  return result;
 }

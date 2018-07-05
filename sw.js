@@ -16,6 +16,8 @@ limitations under the License.
 
 (function() {
     'use strict';
+
+    self.importScripts("/js/idb.js", "/js/idbhelper.js");
   
     var filesToCache = [
         '/',
@@ -127,6 +129,15 @@ limitations under the License.
           );
         })
       );
+    });
+
+    self.addEventListener('sync', function(event) {
+      if (event.tag == 'sync-reviews') {
+        event.waitUntil(console.log("Evento sync"));
+        // dbPromise$ = IDBHelper.openDatabase();
+        // event.waitUntil(IDBHelper.syncReviews(dbPromise$));
+          //doSomeStuff());
+      }
     });
   
   })();
