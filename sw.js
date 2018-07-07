@@ -17,8 +17,35 @@ limitations under the License.
 (function() {
     'use strict';
 
-    self.importScripts("/js/idb.js", "/js/idbhelper.js");
+    self.importScripts("/js/idb.js"); //, "/js/idbhelper.js");
   
+    var store = {
+      db: null,
+    
+      init: () => {
+        if (store.db) { return Promise.resolve(store.db); }
+        return idb.open('data', 3, upgradeDb => {
+          //upgradeDb.createObjectStore('outbox', { autoIncrement : true, keyPath: 'id' });
+        }).then(db => {
+          return store.db = db;
+        });
+      },
+    
+      reviews_to_post: mode => {
+        return store.init().then(db => {
+          return db.transaction('reviews_to_post', mode).objectStore('reviews_to_post');
+        })
+      },
+
+      reviews: mode => {
+        return store.init().then(db => {
+          return db.transaction('reviews', mode).objectStore('reviews');
+        })
+      },
+
+    }
+
+
     var filesToCache = [
         '/',
         '/index.html',
@@ -131,14 +158,49 @@ limitations under the License.
       );
     });
 
-    self.addEventListener('sync', function(event) {
-      if (event.tag == 'sync-reviews') {
-        event.waitUntil(console.log("Evento sync"));
-        // dbPromise$ = IDBHelper.openDatabase();
-        // event.waitUntil(IDBHelper.syncReviews(dbPromise$));
-          //doSomeStuff());
-      }
-    });
+    // self.addEventListener('sync', function(event) {
+    //   console.log("Evento sync", event.tag);
+    //   if (event.tag == 'sync-reviews') {
+    //     console.log("Evento sync");
+    //     // dbPromise$ = IDBHelper.openDatabase();
+    //     // event.waitUntil(IDBHelper.syncReviews(dbPromise$));
+    //       //doSomeStuff());
+    //   }
+    // });
+
+    self.addEventListener('sync', event => {
+      console.log("Evento sync", event.tag);
+      event.waitUntil(
+        store.reviews_to_post('readonly').then(reviews => {
+          return reviews.getAll();
+        }).then(messages => {
+          return Promise.all(messages.map(message => {
+            var clone = Object.assign({}, message);
+            delete clone.id;
+            return fetch('http://localhost:1337/reviews/', {
+              method: 'POST',
+              body: JSON.stringify(clone)
+            }).then(response => {
+              return response.json();
+            })
+            .then(data => {
+              return store.reviews('readwrite').then(function(review) {
+                return review.add(data);
+              });
+            })
+            .then(data => {
+              return store.reviews_to_post('readwrite').then(function(review) {
+                  return review.delete(message.id);
+                });
+              
+            })
+          }))
+        }).catch(function(err) {
+          console.error(err);
+        })
+      );
+    })
+
   
   })();
   

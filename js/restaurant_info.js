@@ -7,12 +7,10 @@ let dbPromise$
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
-
   dbPromise$ = IDBHelper.openDatabase();
 
   IDBHelper.populateReviews(dbPromise$)
     .then(() => {
-
     });
 });
 
@@ -28,27 +26,13 @@ formEl.addEventListener('submit', function(event) {
     .then(x => {
       self.fetchReviewsFromURL();
 
+      //Raise Sync event
       navigator.serviceWorker.ready.then(function(reg) {
         return reg.sync.register('sync-reviews');
       });
-
-
     });
-
-    // IDBHelper.addReview(dbPromise$, [data])
-    // .then(x => {
-      
-    // });
-
-  // DBHelper.addReview(data)
-  //   .then(data => {
-  //     //ul.appendChild(createReviewHTML(data))
-
-  //     console.log(data)
-
-  //   }
-  //   );
   
+  formEl.reset();
   event.preventDefault();
 });
 

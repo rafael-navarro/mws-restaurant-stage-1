@@ -144,26 +144,26 @@ class IDBHelper {
         });
     }
 
-    static syncReviews(database$) {
-        //open the database to make transactions
-        return database$.then(function (db) {
-            if (!db) return;
-            //open an transaction
-            var tx = db.transaction('reviews_to_post', 'readwrite'),
-                store = tx.objectStore('reviews_to_post');
+    // static syncReviews(database$) {
+    //     //open the database to make transactions
+    //     return database$.then(function (db) {
+    //         if (!db) return;
+    //         //open an transaction
+    //         var tx = db.transaction('reviews_to_post', 'readwrite'),
+    //             store = tx.objectStore('reviews_to_post');
 
-            return store.getAll();
-        })
-        .then(reviews => {
-            return Promise.all(reviews.map(review => {
-                return DBHelper.addReview(review)
-                    .then(data => {
-                        console.log("sync", data);
-                        store.delete(review.id);
-                    });
-            }));
-        });
-    }
+    //         return store.getAll();
+    //     })
+    //     .then(reviews => {
+    //         return Promise.all(reviews.map(review => {
+    //             return DBHelper.addReview(review)
+    //                 .then(data => {
+    //                     console.log("sync", data);
+    //                     store.delete(review.id);
+    //                 });
+    //         }));
+    //     });
+    // }
 
 
     static getReviewsById(database$, id) {
