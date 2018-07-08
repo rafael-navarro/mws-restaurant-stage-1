@@ -95,6 +95,9 @@ class IDBHelper {
         })
     }
 
+    /**
+     * Add review to cache
+     */
     static addReviewCache(database$, review) {
         //open the database to make transactions
         return database$.then(function (db) {
@@ -108,6 +111,9 @@ class IDBHelper {
         });
     }
 
+    /**
+     * Fetch all restaurants.
+     */
     static getAllRestaurants(database$) {
         //open the database to make transactions
         return database$.then(function (db) {
@@ -120,6 +126,9 @@ class IDBHelper {
         });
     }
 
+    /**
+     * Fetch restaurant by id.
+     */
     static getRestaurantById(database$, id) {
         //open the database to make transactions
         return database$.then(function (db) {
@@ -132,6 +141,9 @@ class IDBHelper {
         });
     }
 
+    /**
+     * Fetch all reviews
+     */
     static getAllReviews(database$) {
         //open the database to make transactions
         return database$.then(function (db) {
@@ -144,28 +156,9 @@ class IDBHelper {
         });
     }
 
-    // static syncReviews(database$) {
-    //     //open the database to make transactions
-    //     return database$.then(function (db) {
-    //         if (!db) return;
-    //         //open an transaction
-    //         var tx = db.transaction('reviews_to_post', 'readwrite'),
-    //             store = tx.objectStore('reviews_to_post');
-
-    //         return store.getAll();
-    //     })
-    //     .then(reviews => {
-    //         return Promise.all(reviews.map(review => {
-    //             return DBHelper.addReview(review)
-    //                 .then(data => {
-    //                     console.log("sync", data);
-    //                     store.delete(review.id);
-    //                 });
-    //         }));
-    //     });
-    // }
-
-
+    /**
+     * Fetch all reviews by restaurant
+     */
     static getReviewsById(database$, id) {
         //open the database to make transactions
         let reviews$ =  database$.then(function (db) {

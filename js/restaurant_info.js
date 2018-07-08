@@ -15,6 +15,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
 });
 
 
+/**
+ * Manage form submission event.
+ */
 let formEl = document.getElementById('form');
 formEl.addEventListener('submit', function(event) {
   const data = getObjectFromForm(formEl);
@@ -36,6 +39,9 @@ formEl.addEventListener('submit', function(event) {
   event.preventDefault();
 });
 
+/**
+ * Toggle favourite flag for current restaurant
+ */
 toggleFavorite = (restaurant = self.restaurant) => {
   let is_favorite = "true";
   if (restaurant.is_favorite == "true")
