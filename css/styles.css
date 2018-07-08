@@ -215,11 +215,12 @@ nav > h1 > a:focus {
   font-size: 2em;
 }
 #restaurants-list li a {
-  background-color: orange;
+  background-color: darkorange;
   border-bottom: 3px solid #eee;
   color: #fff;
   display: inline-block;
   font-size: 2em;
+  font-weight: 600;
   margin: 15px 0 0;
   padding: 8px 30px 10px;
   text-align: center;
@@ -320,7 +321,7 @@ nav > h1 > a:focus {
 }
 
 #restaurant-container a {
-    background-color: orange;
+    background-color: darkorange;
     border-bottom: 3px solid #eee;
     color: #fff;
     display: inline-block;
@@ -379,13 +380,14 @@ nav > h1 > a:focus {
 }
 
 #reviews-form button {
-  background-color: orange;
+  background-color: darkorange;
   color: #fff;
   display: inline-block;
   padding: 8px 30px 10px;
   text-align: center;
   text-decoration: none;
   text-transform: uppercase;
+  font-size: 1.5em;
 }
 #form {
   background-color: white;

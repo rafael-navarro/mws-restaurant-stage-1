@@ -9,6 +9,7 @@
   <!-- Main CSS file -->
   <link rel="stylesheet" href="css/styles.css" type="text/css">
   <link rel="stylesheet" href="css/responsive.css" type="text/css">
+  <link rel="manifest" href="manifest.json">
   <title>Restaurant Info</title>
   <link rel="icon" type="image/png" href="icons/icon-24.png" />
 </head>
@@ -17,7 +18,7 @@
   <!-- Beginning header -->
   <header>
     <!-- Beginning nav -->
-    <nav>
+    <nav aria-label="Breadcrumb" class="breadcrumb">
       <h1 class="header__title">
         <a href="/">Restaurant Reviews</a>
       </h1>
@@ -25,7 +26,7 @@
       <!-- Beginning breadcrumb -->
       <ul aria-label="Breadcrumb" id="breadcrumb" role="navigation">
         <li>
-          <a href="/">Home</a>
+          <a href="/" aria-current="page">Home</a>
         </li>
       </ul>
       <!-- End breadcrumb -->
@@ -69,10 +70,10 @@
             <input type="text" id="name" required name="name">
           </p>
           <p>
-            <label for="card">
+            <label for="rating">
               <span>Rating:</span>
             </label>
-            <select id="ration" name="rating" value="Good">
+            <select id="rating" name="rating" value="Good">
               <option value="5">Excellent</option>
               <option value="4">Very Good</option>
               <option value="3">Good</option>
@@ -81,7 +82,7 @@
             </select>
           </p>
           <p>
-            <label for="review">
+            <label for="comments">
               <span>Review: </span>
               <strong>
                 <abbr title="required">*</abbr>
@@ -108,8 +109,7 @@
   <!-- End footer -->
 
   <!-- Beginning scripts -->
-  <script type="application/javascript" charset="utf-8" src="js/main.js"></script>
-
+  
   <!-- Database helpers -->
   <script type="text/javascript" src="js/dbhelper.js"></script>
   <script type="application/javascript" charset="utf-8" src="js/idb.js"></script>

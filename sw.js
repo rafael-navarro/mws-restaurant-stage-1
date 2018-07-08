@@ -66,7 +66,6 @@ limitations under the License.
         "/js/idb.js",
         "/js/idbhelper.js",
         "/js/restaurant_info.js",
-        //"/data/restaurants.json",
         "/css/styles.css",
         "/css/responsive.css",
         "/images/1.jpg",
@@ -157,16 +156,6 @@ limitations under the License.
         })
       );
     });
-
-    // self.addEventListener('sync', function(event) {
-    //   console.log("Evento sync", event.tag);
-    //   if (event.tag == 'sync-reviews') {
-    //     console.log("Evento sync");
-    //     // dbPromise$ = IDBHelper.openDatabase();
-    //     // event.waitUntil(IDBHelper.syncReviews(dbPromise$));
-    //       //doSomeStuff());
-    //   }
-    // });
 
     self.addEventListener('sync', event => {
       console.log("Evento sync", event.tag);
